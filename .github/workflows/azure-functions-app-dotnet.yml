@@ -53,6 +53,14 @@ jobs:
         dotnet build --configuration Release --output ./output
         popd
 
+    - name: 'Azure login'
+      uses: azure/login@v2
+      with:
+          auth-type: IDENTITY
+          tenant-id: '6d030fc4-2778-4eb0-a350-bd305be986e9'
+          subscription-id: 'd533009b-b628-466c-878e-749940eceb98'
+          enable-AzPSSession: true
+
     - name: 'Run Azure Functions Action'
       uses: Azure/functions-action@v1
       id: fa
