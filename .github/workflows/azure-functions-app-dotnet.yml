@@ -32,6 +32,28 @@ jobs:
     runs-on: windows-latest # For Linux, use ubuntu-latest
     environment: dev
     steps:
+    - name: 'Azure login'
+      uses: azure/login@v2
+      with:
+          auth-type: IDENTITY
+          tenant-id: '6d030fc4-2778-4eb0-a350-bd305be986e9'
+          subscription-id: 'd533009b-b628-466c-878e-749940eceb98'
+          enable-AzPSSession: true 
+
+    - name: Azure CLI script
+      uses: azure/cli@v2
+      with:
+        azcliversion: latest
+        inlineScript: |
+          az account show
+
+    - name: Run Azure PowerShell
+      uses: azure/powershell@v2
+      with:
+        azPSVersion: "latest"
+        inlineScript: |
+          Get-AzContext
+
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v4
 
@@ -52,14 +74,6 @@ jobs:
         pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
         dotnet build --configuration Release --output ./output
         popd
-
-    - name: 'Azure login'
-      uses: azure/login@v2
-      with:
-          auth-type: IDENTITY
-          tenant-id: '6d030fc4-2778-4eb0-a350-bd305be986e9'
-          subscription-id: 'd533009b-b628-466c-878e-749940eceb98'
-          enable-AzPSSession: true
 
     - name: 'Run Azure Functions Action'
       uses: Azure/functions-action@v1
