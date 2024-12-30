@@ -44,7 +44,7 @@ jobs:
     - name: Setup DotNet 8.0.0 Environment
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.0
+        dotnet-version: 8.x
 
     - name: 'Resolve Project Dependencies Using Dotnet'
       shell: pwsh # For Linux, use bash
