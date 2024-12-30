@@ -49,7 +49,7 @@ jobs:
     - name: 'Resolve Project Dependencies Using Dotnet'
       shell: pwsh # For Linux, use bash
       run: |
-        pushd './deploy'
+        pushd './FunctionApp1/FunctionApp1'
         dotnet build --configuration Release --output ./output
         popd
 
@@ -58,5 +58,5 @@ jobs:
       id: fa
       with:
         app-name: "Function1"
-        package: 'deploy/output'
+        package: 'FunctionApp1/FunctionApp1/output'
         publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }} # Remove publish-profile to use Azure RBAC
