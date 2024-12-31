@@ -61,7 +61,7 @@ jobs:
         run: |
           dotnet restore
           dotnet build --configuration Release
-          dotnet publish --configuration ${{ env.CONFIGURATION }} #--property:PublishDir= "${{ env.AZURE_WEBAPP_Release_PATH }}"
+          dotnet publish --configuration ${{ env.CONFIGURATION }} --no-build --property:PublishDir= "${{ env.AZURE_WEBAPP_Release_PATH }}"
           #dotnet publish -c Release -o ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
       # - name: Build with dotnet        
