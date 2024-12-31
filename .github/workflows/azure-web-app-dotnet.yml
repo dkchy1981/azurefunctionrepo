@@ -103,8 +103,8 @@ jobs:
         with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: 'Checkout GitHub Action'
-        uses: actions/checkout@v4
+      # - name: 'Checkout GitHub Action'
+      #   uses: actions/checkout@v4
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
