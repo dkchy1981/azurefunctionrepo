@@ -12,7 +12,7 @@ name: Build and deploy ASP.Net Core app to an Azure Web App
 env:
   AZURE_WEBAPP_NAME: "webapp31121"   # set this to your application's name
   AZURE_WEBAPP_PATH: './RestWebAPI1/'      # set this to the path to your web app project, defaults to the repository root
-  AZURE_WEBAPP_PACKAGE_PATH: './RestWebAPI1/publish'      # set this to the path to your web app project, defaults to the repository root
+  AZURE_WEBAPP_PACKAGE_PATH: './RestWebAPI1'      # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '8.x.x'                 # set this to the .NET Core version to use
 
   AZURE_APIM_RESOURCE_PATH: /
@@ -22,8 +22,8 @@ env:
   AZURE_APIM_APPSERVICEURL: https://webapp31121-dfdag6h5ewhnduds.ukwest-01.azurewebsites.net
   SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 5.6.3
   SWASHBUCKLE_DOTNET_CORE_VERSION: 3.1.x
-  API_IMPORT_SPECIFICATION_PATH: RestWebAPI1\publish\swagger.json
-  API_IMPORT_DLL: RestWebAPI1\publish\bin\Release\net8.0\RestWebAPI1.dll
+  API_IMPORT_SPECIFICATION_PATH: RestWebAPI1\swagger.json
+  API_IMPORT_DLL: RestWebAPI1\publish\bin\net8.0\RestWebAPI1.dll
   API_IMPORT_VERSION: v1
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
