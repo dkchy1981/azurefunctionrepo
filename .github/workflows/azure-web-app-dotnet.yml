@@ -11,7 +11,8 @@ name: Build and deploy ASP.Net Core app to an Azure Web App
 
 env:
   AZURE_WEBAPP_NAME: "webapp31121"   # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: 'RestWebAPI1/RestWebAPI1/'      # set this to the path to your web app project, defaults to the repository root
+  AZURE_WEBAPP_PACKAGE_PROJ: './RestWebAPI1/RestWebAPI1/RestWebAPI1.csproj'
+  AZURE_WEBAPP_PACKAGE_PATH: './RestWebAPI1/RestWebAPI1/'      # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '8.x.x'                 # set this to the .NET Core version to use
 
   AZURE_APIM_RESOURCE_PATH: /
@@ -60,7 +61,7 @@ jobs:
         run: |
           dotnet restore
           dotnet build --configuration Release
-          dotnet publish --configuration ${{ env.CONFIGURATION }} --property:PublishDir= ${{ env.AZURE_WEBAPP_Release_PATH }}
+          dotnet publish ${{env.AZURE_WEBAPP_PACKAGE_PROJ}} --configuration ${{ env.CONFIGURATION }} --property:PublishDir= ${{ env.AZURE_WEBAPP_Release_PATH }}
           #dotnet publish -c Release -o ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
       # - name: Build with dotnet        
