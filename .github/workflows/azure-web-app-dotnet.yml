@@ -79,4 +79,5 @@ jobs:
         uses: azure/webapps-deploy@85270a1854658d167ab239bce43949edb336fa7c
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          package: ${{env.DOTNET_ROOT}}/myapp 
+          #package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
