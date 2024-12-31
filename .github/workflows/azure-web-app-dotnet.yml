@@ -11,13 +11,27 @@ name: Build and deploy ASP.Net Core app to an Azure Web App
 
 env:
   AZURE_WEBAPP_NAME: "webapp31121"   # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: './RestWebAPI1/'      # set this to the path to your web app project, defaults to the repository root
+  AZURE_WEBAPP_PACKAGE_PATH: 'RestWebAPI1\publish'      # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '8.x.x'                 # set this to the .NET Core version to use
+
+  AZURE_APIM_RESOURCE_PATH: /
+  AZURE_APIM_RESOURCEGROUP: test1-rg-30121
+  AZURE_APIM_SERVICENAME: test1APIM
+  AZURE_APIM_API_ID: restwebapi1
+  AZURE_APIM_APPSERVICEURL: https://webapp31121-dfdag6h5ewhnduds.ukwest-01.azurewebsites.net
+  SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 5.6.3
+  SWASHBUCKLE_DOTNET_CORE_VERSION: 3.1.x
+  API_IMPORT_SPECIFICATION_PATH: RestWebAPI1\publish\swagger.json
+  API_IMPORT_DLL: RestWebAPI1\publish\bin\Release\net8.0\RestWebAPI1.dll
+  API_IMPORT_VERSION: v1
+  CONFIGURATION: Release
+  DOTNET_CORE_VERSION: 8.0.x
+  WORKING_DIRECTORY: RestWebAPI1
 
 on:
   push:
     branches:
-      - main2
+      - main
 
 jobs:
   build:
@@ -88,7 +102,14 @@ jobs:
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@85270a1854658d167ab239bce43949edb336fa7c
+        uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           package: ${{env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+      - name: Import API into Azure API Management
+        run: az apim api import --path "${{ env.AZURE_APIM_RESOURCE_PATH }}" --resource-group "${{ env.AZURE_APIM_RESOURCEGROUP }}" --service-name "${{ env.AZURE_APIM_SERVICENAME }}" --api-id "${{ env.AZURE_APIM_API_ID }}" --service-url "${{ env.AZURE_APIM_APPSERVICEURL }}" --specification-path "${{ env.API_IMPORT_SPECIFICATION_PATH }}" --specification-format OpenApi --subscription-required false
+      
+      - name: logout
+        run: >
+            az logout

@@ -2,7 +2,7 @@ name: Build and deploy .NET Core application to Web App webapp31121 with API Man
 on:
   push:
     branches:
-    - main
+    - main2
 env:
   AZURE_WEBAPP_NAME: webapp31121
   AZURE_WEBAPP_PACKAGE_PATH: RestWebAPI1\publish
