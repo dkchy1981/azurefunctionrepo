@@ -27,7 +27,7 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: RestWebAPI1
-  AZURE_WEBAPP_Release_PATH: 'RestWebAPI1\bin\Release\net8.0'
+  AZURE_WEBAPP_Release_PATH: 'RestWebAPI1/bin/Release/net8.0/publish/'
 
 on:
   push:
