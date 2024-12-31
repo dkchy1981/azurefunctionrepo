@@ -11,8 +11,7 @@ name: Build and deploy ASP.Net Core app to an Azure Web App
 
 env:
   AZURE_WEBAPP_NAME: "webapp31121"   # set this to your application's name
-  AZURE_WEBAPP_PATH: './RestWebAPI1'      # set this to the path to your web app project, defaults to the repository root
-  AZURE_WEBAPP_PACKAGE_PATH: './RestWebAPI1/publish'      # set this to the path to your web app project, defaults to the repository root
+  AZURE_WEBAPP_PACKAGE_PATH: './RestWebAPI1'      # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '8.x.x'                 # set this to the .NET Core version to use
 
   AZURE_APIM_RESOURCE_PATH: /
@@ -28,6 +27,7 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: RestWebAPI1
+  AZURE_WEBAPP_Release_PATH: './RestWebAPI1\bin\Release\net8.0\publish'
 
 on:
   push:
@@ -56,7 +56,7 @@ jobs:
 
 
       # - name: dotnet build and publish
-      #   working-directory: ./${{ env.AZURE_WEBAPP_PATH }}
+      #   working-directory: ./${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
       #   run: |
       #     dotnet restore
       #     dotnet build --configuration Release
@@ -64,18 +64,18 @@ jobs:
 
       - name: Build with dotnet        
         run: |
-           pushd './${{ env.AZURE_WEBAPP_PATH }}'
+           pushd './${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
            dotnet build --configuration Release
            popd
 
       - name: dotnet publish
-        run: dotnet publish ${{ env.AZURE_WEBAPP_PATH }} --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        run: dotnet publish ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
             
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.AZURE_WEBAPP_PACKAGE_PATH}}
+          path: ${{env.AZURE_WEBAPP_Release_PATH}}
 
   deploy:
     runs-on: ubuntu-latest
@@ -103,7 +103,7 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: ${{env.AZURE_WEBAPP_PATH }}
+          package: ${{env.AZURE_WEBAPP_PACKAGE_PATH }}
 
       - name: Import API into Azure API Management
         run: az apim api import --path "${{ env.AZURE_APIM_RESOURCE_PATH }}" --resource-group "${{ env.AZURE_APIM_RESOURCEGROUP }}" --service-name "${{ env.AZURE_APIM_SERVICENAME }}" --api-id "${{ env.AZURE_APIM_API_ID }}" --service-url "${{ env.AZURE_APIM_APPSERVICEURL }}" --specification-path "${{ env.API_IMPORT_SPECIFICATION_PATH }}" --specification-format OpenApi --subscription-required false
