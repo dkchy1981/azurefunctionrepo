@@ -13,6 +13,7 @@ env:
   AZURE_WEBAPP_NAME: "webapp31121"   # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PROJ: './RestWebAPI1/RestWebAPI1/RestWebAPI1.csproj'
   AZURE_WEBAPP_PACKAGE_PATH: './RestWebAPI1/RestWebAPI1/'      # set this to the path to your web app project, defaults to the repository root
+  AZURE_WEBAPP_PACKAGE_Swagger_PATH: './RestWebAPI1/RestWebAPI1/swagger.json'
   DOTNET_VERSION: '8.x.x'                 # set this to the .NET Core version to use
 
   AZURE_APIM_RESOURCE_PATH: /
@@ -22,7 +23,7 @@ env:
   AZURE_APIM_APPSERVICEURL: https://webapp31121-dfdag6h5ewhnduds.ukwest-01.azurewebsites.net
   SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 6.6.2
   SWASHBUCKLE_DOTNET_CORE_VERSION: 3.1.x
-  API_IMPORT_SPECIFICATION_PATH: RestWebAPI1\swagger.json
+  API_IMPORT_SPECIFICATION_PATH: .\RestWebAPI1\RestWebAPI1\bin\Release\net8.0\publish\swagger.json
   API_IMPORT_DLL: RestWebAPI1/RestWebAPI1/bin/Release/net8.0/RestWebAPI1.dll
   API_IMPORT_VERSION: v1
   CONFIGURATION: Release
@@ -115,7 +116,7 @@ jobs:
           package: ${{env.AZURE_WEBAPP_PACKAGE_PATH }}
 
       - name: Import API into Azure API Management
-        run: az apim api import --path "${{ env.AZURE_APIM_RESOURCE_PATH }}" --resource-group "${{ env.AZURE_APIM_RESOURCEGROUP }}" --service-name "${{ env.AZURE_APIM_SERVICENAME }}" --api-id "${{ env.AZURE_APIM_API_ID }}" --service-url "${{ env.AZURE_APIM_APPSERVICEURL }}" --specification-path "${{ env.API_IMPORT_SPECIFICATION_PATH }}" --specification-format OpenApi --subscription-required false
+        run: az apim api import --path "${{ env.AZURE_APIM_RESOURCE_PATH }}" --resource-group "${{ env.AZURE_APIM_RESOURCEGROUP }}" --service-name "${{ env.AZURE_APIM_SERVICENAME }}" --api-id "${{ env.AZURE_APIM_API_ID }}" --service-url "${{ env.AZURE_APIM_APPSERVICEURL }}" --specification-path "${{ env.AZURE_WEBAPP_PACKAGE_Swagger_PATH }}" --specification-format OpenApi --subscription-required false
       
       - name: logout
         run: >
