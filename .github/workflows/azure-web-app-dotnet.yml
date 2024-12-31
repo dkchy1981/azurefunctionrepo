@@ -21,13 +21,13 @@ env:
   AZURE_APIM_APPSERVICEURL: https://webapp31121-dfdag6h5ewhnduds.ukwest-01.azurewebsites.net
   SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 5.6.3
   SWASHBUCKLE_DOTNET_CORE_VERSION: 3.1.x
-  API_IMPORT_SPECIFICATION_PATH: RestWebAPI1\publish\swagger.json
-  API_IMPORT_DLL: RestWebAPI1\publish\bin\net8.0\RestWebAPI1.dll
+  API_IMPORT_SPECIFICATION_PATH: RestWebAPI1\swagger.json
+  API_IMPORT_DLL: RestWebAPI1\bin\Release\net8.0\publish\RestWebAPI1.dll
   API_IMPORT_VERSION: v1
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: RestWebAPI1
-  AZURE_WEBAPP_Release_PATH: './RestWebAPI1\bin\Release\net8.0\publish'
+  AZURE_WEBAPP_Release_PATH: 'RestWebAPI1\bin\Release\net8.0\publish'
 
 on:
   push:
@@ -69,7 +69,14 @@ jobs:
            popd
 
       - name: dotnet publish
-        run: dotnet publish ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        run: dotnet publish ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} --configuration ${{ env.CONFIGURATION }} --no-build #--output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+      - name: Install Swashbuckle CLI .NET Global Tool
+        run: dotnet tool install --global Swashbuckle.AspNetCore.Cli --version ${{ env.SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION }}
+        working-directory: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+      - name: Generate Open API Specification Document
+        run: swagger tofile --output "${{ env.API_IMPORT_SPECIFICATION_PATH }}" "${{ env.API_IMPORT_DLL }}" "${{ env.API_IMPORT_VERSION }}"
             
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
