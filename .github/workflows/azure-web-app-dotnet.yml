@@ -39,23 +39,31 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
-      - name: Build with dotnet        
-        run: |
-           pushd './${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
-           dotnet build --configuration Release
-           popd
 
-      - name: dotnet publish
+      - name: dotnet build and publish
+        working-directory: ./${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
         run: |
-            pushd './${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
-            dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-            popd
+          dotnet restore
+          dotnet build --configuration Release
+          dotnet publish -c Release -o ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+      # - name: Build with dotnet        
+      #   run: |
+      #      pushd './${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+      #      dotnet build --configuration Release
+      #      popd
+
+      # - name: dotnet publish
+      #   run: |
+      #       pushd './${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+      #       dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      #       popd
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{env.AZURE_WEBAPP_PACKAGE_PATH}}
 
   deploy:
     runs-on: ubuntu-latest
@@ -79,4 +87,4 @@ jobs:
         uses: azure/webapps-deploy@85270a1854658d167ab239bce43949edb336fa7c
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: ${{env.DOTNET_ROOT}}/myapp
+          package: ${{env.AZURE_WEBAPP_PACKAGE_PATH }}
